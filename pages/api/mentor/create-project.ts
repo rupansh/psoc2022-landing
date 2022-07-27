@@ -4,6 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/deps/prisma";
 import { errResp, expressRes, expressUnwrappErr } from "../../../lib/helpers/apiResp";
 import { getAuthUser } from "../../../lib/helpers/auth";
+import { bodyValidator } from "../../../lib/middleware/reqValidator";
 import { CreateProjectReq } from "../../../lib/requests/createProject";
 
 const ERR_NOT_MENTOR = errResp(403, "You are not a mentor");
@@ -24,3 +25,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse, createParams: 
 
     return expressRes(res, right({ id: project.id }));
 }
+
+export default bodyValidator(CreateProjectReq, handler);
