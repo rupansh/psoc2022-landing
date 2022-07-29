@@ -24,7 +24,7 @@ const getAuthUserInner = async <T extends IncludeParams>(req: NextApiRequest, in
 
     const user = await prisma.user.findUnique({ where: { id: payload.value.userId }, include });
     if (!user) {
-        if (!include) logger.crit("possible private key leak! recv invalid token", token);
+        if (!include) logger.log("critical", "possible private key leak! recv invalid token", token);
 
         return left(ERR_USER_NF);
     }
