@@ -5,7 +5,7 @@
   "scripts": {
     "next:lint": "next lint",
     "next:build": "next build",
-    "prisma:lint": "prisma lint",
+    "prisma:lint": "prisma format",
     "prisma:generate": "prisma generate",
     "dev": "next dev",
     "build": "npm run prisma:generate && npm run next:build",
