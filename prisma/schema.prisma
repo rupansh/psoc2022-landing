@@ -42,7 +42,7 @@ model Mentor {
 }
 
 type ProjectApplications {
-  userId      String @db.ObjectId
+  menteeId      String @db.ObjectId
   application String
 }
 
