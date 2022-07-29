@@ -12,7 +12,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, acc: AcceptMen
     const mentor = await getMentor(req);
     if (isLeft(mentor)) return expressUnwrappErr(res, mentor);
 
-    const proj = await prisma.project.findFirst({
+    const proj = await prisma.project.count({
         where: {
             id: acc.projectId,
             OR: {
@@ -25,7 +25,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, acc: AcceptMen
             }
         }
     });
-    if (proj) return expressUnwrappErr(res, left(ERR_MENTEE_ACCEPTED));
+    if (proj != 0) return expressUnwrappErr(res, left(ERR_MENTEE_ACCEPTED));
 
     await prisma.project.update({
         where: {
