@@ -26,6 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, prReq: Project
             applications: true,
             appliedMentees: {
                 select: {
+                    id: true,
                     user: {
                         select: {
                             name: true
@@ -38,8 +39,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse, prReq: Project
 
     if (!proj) return expressUnwrappErr(res, left(ERR_PROJECT_NF))
 
+    const names: { [menteeId: string]: string } = {};
+
+    for (const mentee of proj.appliedMentees) {
+        names[mentee.id] = mentee.user.name;
+    }
+
     const ret: ApplicantsRes = proj.applications.map((a, i) => ({
-        name: proj.appliedMentees[i].user.name,
+        name: names[a.menteeId],
         menteeId: a.menteeId,
         application: a.application
     }));
