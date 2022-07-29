@@ -26,6 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, createParams: 
             name: createParams.name,
             url: createParams.url,
             description: createParams.description,
+            logo: createParams.logo,
             mentor: { connect: { id: user.right.mentor.id } }
         },
     });

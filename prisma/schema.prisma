@@ -51,6 +51,7 @@ model Project {
   name             String
   url              String
   description      String
+  logo             String
   mentor           Mentor                @relation(fields: [mentorId], references: [id])
   mentorId         String                @db.ObjectId
   appliedMentees   Mentee[]              @relation("applied", fields: [appliedMenteeIds], references: [id])
