@@ -5,7 +5,7 @@ import prisma from "../../../lib/deps/prisma";
 import { expressRes, expressUnwrappErr } from "../../../lib/helpers/apiResp";
 import { getMentor } from "../mentor/create-project";
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const user = await getMentor(req);
     if (isLeft(user)) return expressUnwrappErr(res, user);
 
