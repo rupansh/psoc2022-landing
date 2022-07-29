@@ -37,6 +37,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse, acc: AcceptMen
             },
             selectedMentees: {
                 connect: { id: acc.menteeId },
+            },
+            applications: {
+                deleteMany: {
+                    where: {
+                        menteeId: acc.menteeId
+                    }
+                }
             }
         }
     });
