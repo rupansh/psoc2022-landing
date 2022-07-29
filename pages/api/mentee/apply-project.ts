@@ -11,7 +11,7 @@ export const ERR_NOT_MENTEE = errResp(403, "Mentee Access Required");
 export const ERR_PROJECT_FINALIZED = errResp(400, "Project is finalized");
 export const ERR_ALREADY_APPLIED = errResp(400, "Already Applied");
 
-async function handler(req: NextApiRequest, res: NextApiResponse, { projectId }: ApplyProjectReq) {
+async function handler(req: NextApiRequest, res: NextApiResponse, { projectId, application }: ApplyProjectReq) {
     const user = await getAuthUser(req, { mentee: { select: { id: true, finalizedProjectId: true } } });
     if (isLeft(user)) return expressUnwrappErr(res, user);
     if (user.right.role != Role.MENTEE) return expressUnwrappErr(res, left(ERR_NOT_MENTEE));
@@ -39,6 +39,20 @@ async function handler(req: NextApiRequest, res: NextApiResponse, { projectId }:
     });
 
     if (menteeInfo.count == 0) return expressUnwrappErr(res, left(ERR_ALREADY_APPLIED));
+
+    await prisma.project.update({
+        where: {
+            id: projectId
+        },
+        data: {
+            applications: {
+                push: {
+                    userId: user.right.id,
+                    application
+                } 
+            }
+        }
+    })
 
     return expressRes(res, right("applied"));
 }
