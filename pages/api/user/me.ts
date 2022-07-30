@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { expressRes, expressUnwrappErr } from "../../../lib/helpers/apiResp";
 import { getAuthUser } from "../../../lib/helpers/auth";
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const user = await getAuthUser(req);
     if (isLeft(user)) return expressUnwrappErr(res, user);
 
