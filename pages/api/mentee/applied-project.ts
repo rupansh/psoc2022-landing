@@ -1,4 +1,3 @@
-import { Role } from "@prisma/client";
 import { isLeft, left, right } from "fp-ts/lib/Either";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/deps/prisma";
@@ -8,18 +7,18 @@ import { projectToDomain, PROJECT_SELECT } from "../projects";
 import { ERR_NOT_MENTEE } from "./apply-project";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const user = await getAuthUser(req, { mentee: { select: { id: true, finalizedProjectId: true } } });
+    const user = await getAuthUser(req, { mentee: { select: { id: true } } });
     if (isLeft(user)) return expressUnwrappErr(res, user);
-    if (user.right.role != Role.MENTEE) return expressUnwrappErr(res, left(ERR_NOT_MENTEE));
+    if (!user.right.mentee) return expressUnwrappErr(res, left(ERR_NOT_MENTEE));
 
     const projects = await prisma.project.findMany({
         select: PROJECT_SELECT,
         where: {
-            selectedMentees: {
-                some: { id: user.right.mentee!.id }
+            appliedMentees: {
+                some: { id: user.right.mentee.id }
             }
         }
     });
 
-    return expressRes(res, right(projects.map(projectToDomain)))
+    return expressRes(res, right(projects.map(projectToDomain)));
 }
