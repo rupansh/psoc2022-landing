@@ -4,6 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/deps/prisma";
 import { errResp, expressRes, expressUnwrappErr } from "../../../lib/helpers/apiResp";
 import { getAuthUser } from "../../../lib/helpers/auth";
+import { bodyValidator } from "../../../lib/middleware/reqValidator";
 import { FinalizeProjectReq } from "../../../lib/requests/finalizeProject";
 import { ERR_NOT_MENTEE } from "./apply-project";
 
@@ -41,3 +42,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse, { projectId }:
 
     return expressRes(res, right("finalized"));
 }
+
+export default bodyValidator(FinalizeProjectReq, handler);
