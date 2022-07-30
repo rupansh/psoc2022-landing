@@ -61,9 +61,9 @@ export const getProjects = async (req: NextApiRequest, res: NextApiResponse, cur
                 }
             }
         },
-        cursor: {
+        cursor: cursor ? {
             id: cursor
-        }
+        } : undefined
     }
 
     const projects = await prisma.project.findMany(query);
